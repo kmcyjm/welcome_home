@@ -1,3 +1,15 @@
+"""
+Example:
+
+python3 upload_image.py --file /PATH/TO/image.JPG --first-name FIRST_NAME --full-name FULL_NAME --bucket S3_BUCKET_NAME
+--prefix PATH/TO/IMAGE.jpg"
+
+Note.
+
+No forward slash in front of the PATH in PATH/TO/IMAGE.jpg
+"""
+
+
 import boto3
 import argparse
 

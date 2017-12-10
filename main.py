@@ -87,7 +87,7 @@ def call_person(person):
         names = names + ' ' + i
 
     if names.strip() == 'Juan':
-        input_text = "hola juan, tenías un buen día hoy?"
+        input_text = "hola juan, has tenido un buen día hoy?"
     else:
         input_text = "Welcome home " + names + ", did you have a good day today?"
 
@@ -105,7 +105,7 @@ def put_image(bucket, byte_image):
     s3.put_object(
         Body=byte_image,
         Bucket=bucket,
-        Key='rekognition/archive/' + str(uuid.uuid4()) + datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + '.jpeg'
+        Key='rekognition/archive/' + str(uuid.uuid4()) + '_' + datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + '.jpeg'
     )
 
 
@@ -117,30 +117,30 @@ polly = boto3.client('polly', region_name='eu-west-1')
 my_bucket = 'tlelet.com'
 local_image = '/tmp/image.jpeg'
 
-# while True:
-with PiCamera() as camera:
+while True:
+    with PiCamera() as camera:
 
-    camera.start_preview()
+        camera.start_preview()
 
-    # Camera warm-up time
-    sleep(2)
+        # Camera warm-up time
+        sleep(2)
 
-    camera.resolution = (1280, 720)
-    camera.capture(local_image, 'jpeg')
+        camera.resolution = (1280, 720)
+        camera.capture(local_image, 'jpeg')
 
-    image = Image.open(local_image)
-    stream = io.BytesIO()
-    image.save(stream, format="JPEG")
-    image_binary = stream.getvalue()
+        image = Image.open(local_image)
+        stream = io.BytesIO()
+        image.save(stream, format="JPEG")
+        image_binary = stream.getvalue()
 
-    all_faces = detect_faces(image_binary)
+        all_faces = detect_faces(image_binary)
 
-    if len(all_faces) == 0:
-        print('No faces detected!')
-    else:
-        person = identify_faces(image, all_faces)
-        call_person(person)
-        put_image(my_bucket, image_binary)
+        if len(all_faces) == 0:
+            print('No faces detected!')
+        else:
+            person = identify_faces(image, all_faces)
+            call_person(person)
+            put_image(my_bucket, image_binary)
 
 
 
